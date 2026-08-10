@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Cold-start burst harness for the Vocobase challenge.
+"""Burst latency harness for warm-pool voice agent testing.
 
-Implements exactly the section-5 test:
+Protocol:
 
 1. Open ``--steady`` (default 10) sessions and hold them open. With Cloud Run
    ``concurrency=1`` each lands on its own instance, so we are "at capacity".

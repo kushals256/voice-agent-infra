@@ -1,7 +1,7 @@
-# Vocobase cold-start challenge — submission
+# Warm Pool Voice Agent
 
-Self-hosted Pipecat voice bot on **Google Cloud Run**, with Terraform IaC, a
-section-5 burst harness, and measured cold-start breakdown.
+Self-hosted real-time voice agent on **Google Cloud Run**, with Terraform IaC, a
+burst latency harness, and measured cold-start breakdown.
 
 | Item | Location |
 | --- | --- |
@@ -36,20 +36,19 @@ diff _reference/bot.py bot/bot.py
 - **Deepgram TTS + NVIDIA NIM LLM** — provider swaps after hitting free-tier limits
 - **Slimmer deps + amd64 Dockerfile** — smaller image, faster cold import
 
-Everything else in the repo (Terraform, harness, scripts) is net-new for the
-assignment, not present in the quickstart.
+Everything else in the repo (Terraform, harness, scripts) is net-new, not
+present in the quickstart.
 
 ---
 
 ## Approach chosen, and why
 
-The assignment names two levers: make a ready container **cheap enough** or
-**fast enough to produce**. On a from-scratch cloud container you **cannot**
-produce a ready slot in &lt;5s — scheduling, image availability, and a ~20s
-Python/model import all sit in the way. Any design that passes the burst test
-therefore keeps **enough warm slots to absorb the burst**. The engineering is
-in making those slots cheap, refilling them quickly, and being explicit about
-where the wall is.
+There are two levers: make a ready container **cheap enough** or **fast enough
+to produce**. On a from-scratch cloud container you **cannot** produce a ready
+slot in &lt;5s — scheduling, image availability, and a ~20s Python/model import
+all sit in the way. Any design that hits a sub-5s burst target therefore keeps
+**enough warm slots to absorb the burst**. The engineering is in making those
+slots cheap, refilling them quickly, and being explicit about where the wall is.
 
 ### What I chose: Cloud Run + warm spare pool
 
@@ -62,7 +61,7 @@ where the wall is.
 | **WebSocket transport** | Cloud Run is HTTP/WebSocket-native; deterministic “first binary frame” timing for the harness; maps to telephony-style Media Streams. |
 | **`startup_cpu_boost`** | Extra CPU during init compresses the import phase. |
 
-**Pool sizing for section 5:** 10 steady sessions at capacity + burst of 10 →
+**Pool sizing for the burst test:** 10 steady sessions at capacity + burst of 10 →
 `min-instances=20` (10 productive + 10 spares). The bet: *up to 10 new
 conversations start inside one ~21s boot window.*
 
@@ -79,11 +78,11 @@ flowchart LR
 
 | Alternative | Why rejected |
 | --- | --- |
-| **AWS ECS/Fargate** | Closest to Vocobase’s real stack and instructive, but not free — Fargate, NAT, ALB, ElastiCache bill quietly. Also requires hand-building scaler, slot-claim, and scale-in protection that Cloud Run provides. |
+| **AWS ECS/Fargate** | Production-grade and instructive, but not free — Fargate, NAT, ALB, ElastiCache bill quietly. Also requires hand-building scaler, slot-claim, and scale-in protection that Cloud Run provides. |
 | **Oracle Cloud Always Free** | Genuinely $0, but free ARM was halved (2 OCPU / 12 GB as of mid-2026) and “out of host capacity” makes launch unreliable. Marginal for ~20 voice bots. |
 | **GKE + custom controller** | Richest “build the fleet controller” story (Redis TTL, self-claim, scale-in protection), but cluster fee and complexity — overkill for hitting this number on $0. |
 | **Fly.io / Firecracker snapshots** | Best “fast to produce” path (sub-second restore of a fully-warmed process), but no free tier. Direction I’d take with budget — see [What I'd do differently](#what-id-do-differently-with-more-time). |
-| **Pipecat Cloud** | Ruled out by the assignment. |
+| **Pipecat Cloud** | Managed hosting — wanted full control of infra and cost model. |
 
 ### Honest trade-off of Cloud Run
 
@@ -149,7 +148,7 @@ Warm spare (import already done):
 
 ---
 
-## Test results (section 5)
+## Burst test results
 
 **Protocol:** Open 10 steady WebSocket sessions and hold them (at capacity with
 `concurrency=1`). Fire 10 burst sessions back-to-back. Measure wall time from
@@ -223,7 +222,7 @@ Busy call  : (1 × 0.000024  + 2 × 0.0000025) × 3600 = $0.104 / hr
 
 Design: 10 steady conversations + **10 warm spares** for a burst of 10.
 
-**Idle capacity** (what the assignment asks for — spares only, not productive load):
+**Idle capacity** (warm spares only, not productive load):
 
 ```
 10 spares × $0.027/hr = $0.27 / hr
@@ -263,7 +262,7 @@ Proportional spare pool (100 spares — survives burst of 100):
 ```
 
 Fixed pool is cheap but fails on burst &gt; 10. Proportional pool survives larger
-bursts but idle cost scales linearly — exactly the bet the assignment describes.
+bursts but idle cost scales linearly — the classic spare-pool trade-off.
 Cloud Run’s idle rate (~4× cheaper than active) and scale-to-zero make the bet
 affordable for bounded windows; they don’t change the curve’s shape.
 
@@ -282,8 +281,8 @@ lag before replacement instances start.
 **Symptom:** Silence on the line while a container cold-starts. p95 blows past
 5s by an order of magnitude.
 
-**My sizing:** Pool of 10 spares handles section-5’s burst of 10 exactly. A
-burst of 11+ loses.
+**My sizing:** Pool of 10 spares handles a burst of 10 exactly. A burst of 11+
+ loses.
 
 ### 2. Platform instance quota (20 in default GCP project)
 
@@ -325,9 +324,9 @@ If all land on warm spares but LLM greeting:
   → ~5s p95; infra OK, provider pipeline is the ceiling
 ```
 
-The warm pool is a bet on burst shape. My bet matches section 5 exactly; it
-does not generalize to arbitrary traffic without resizing the pool or making
-cold produce faster.
+The warm pool is a bet on burst shape. This sizing matches a 10+10 steady/burst
+pattern exactly; it does not generalize to arbitrary traffic without resizing
+the pool or making cold produce faster.
 
 ---
 
@@ -417,7 +416,7 @@ PROJECT_ID=$PROJECT_ID scripts/teardown.sh
 bot/            Modified Pipecat bot (WebSocket, COLDSTART logs, Dockerfile)
 _reference/     Upstream quickstart snapshot + CHANGES.md (for diff)
 infra/          Terraform — Cloud Run v2, Artifact Registry, Secret Manager
-harness/        Section-5 burst harness + committed primary result JSON
+harness/        Burst latency harness + committed primary result JSON
 scripts/        build_push, deploy, set_pool, run_test, teardown
 ```
 
@@ -440,4 +439,4 @@ Key files: [`bot/bot.py`](bot/bot.py), [`infra/main.tf`](infra/main.tf),
 
 Bot derived from
 [pipecat-ai/pipecat-quickstart](https://github.com/pipecat-ai/pipecat-quickstart)
-(BSD-2-Clause). Not using Pipecat Cloud, per the assignment.
+(BSD-2-Clause). Self-hosted; not using Pipecat Cloud.

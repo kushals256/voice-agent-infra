@@ -41,7 +41,7 @@ variable "memory" {
 
 variable "min_instances" {
   type        = number
-  description = "Warm spare pool floor. Set to 20 for the section-5 test; 0 to scale to zero (free)."
+  description = "Warm spare pool floor. Set to 20 for burst testing; 0 to scale to zero."
   default     = 0
 }
 

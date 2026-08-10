@@ -1,7 +1,7 @@
 [project]
-name = "vocobase-bot"
+name = "warm-pool-voice-agent"
 version = "0.1.0"
-description = "Self-hosted Pipecat voice bot (WebSocket transport) for the cold-start challenge"
+description = "Self-hosted Pipecat voice agent with WebSocket transport and warm spare pooling"
 requires-python = ">=3.10"
 dependencies = [
     # Slimmed vs the upstream quickstart: only the services we actually deploy.

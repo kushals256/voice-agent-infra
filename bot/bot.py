@@ -163,7 +163,7 @@ async def run_bot(transport: BaseTransport, runner_args: RunnerArguments):
     stt = DeepgramSTTService(api_key=os.getenv("DEEPGRAM_API_KEY"))
 
     # Deepgram Aura TTS shares the STT API key; 45 concurrent WSS streams on PAYG
-    # vs Cartesia free tier's limit of 2 (which blocked the section-5 burst test).
+    # vs Cartesia free tier's limit of 2 (which blocked burst testing at scale).
     tts = DeepgramTTSService(
         api_key=os.getenv("DEEPGRAM_API_KEY"),
         settings=DeepgramTTSService.Settings(

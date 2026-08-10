@@ -22,7 +22,7 @@ Upstream snapshot is in this folder. Modified code is in [`../bot/`](../bot/).
 | --- | --- |
 | [`../bot/raw_serializer.py`](../bot/raw_serializer.py) | Raw PCM WebSocket serializer for deterministic first-audio timing |
 | [`../infra/`](../infra/) | Terraform — Cloud Run, Artifact Registry, Secret Manager |
-| [`../harness/harness.py`](../harness/harness.py) | Section-5 burst test client |
+| [`../harness/harness.py`](../harness/harness.py) | Burst latency test client |
 | [`../scripts/`](../scripts/) | build, deploy, set warm pool, run test, teardown |
 
 ## `bot.py` — key modifications
@@ -45,13 +45,13 @@ Upstream snapshot is in this folder. Modified code is in [`../bot/`](../bot/).
 
 ## `pyproject.toml` — key modifications
 
-1. Renamed project to `vocobase-bot`.
+1. Renamed project to `warm-pool-voice-agent`.
 2. Removed **`webrtc`, `daily`, `cartesia`** extras — fewer imports, faster cold start.
 3. Added **`websocket`** extra for the plain WS transport.
 
 ## Everything else in the repo (not bot changes)
 
-These are the assignment deliverables beyond modifying the quickstart:
+Net-new infrastructure and tooling beyond the quickstart:
 
 - **Infrastructure:** warm spare pool via Cloud Run `min-instances`, Terraform IaC.
 - **Harness:** 10 steady + 10 burst sessions, p95 on request → first audio.

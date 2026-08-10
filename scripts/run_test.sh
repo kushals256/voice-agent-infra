@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Run the section-5 burst test against the deployed service.
+# Run the burst latency test against the deployed service.
 #
 # Env: STEADY (default 10), BURST (default 10), TARGET (default 5.0)
 #      WS_URL (optional; otherwise read from terraform output)

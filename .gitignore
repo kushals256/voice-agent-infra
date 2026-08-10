@@ -26,6 +26,6 @@ venv/
 .vscode/
 *.swp
 
-# ── Everything else is part of the submission and should be committed: ─────
+# ── Everything else is part of the repo and should be committed: ───────────
 #   bot/  infra/  harness/  scripts/  _reference/  README.md
 #   harness/results/*.json  (test artifacts)
