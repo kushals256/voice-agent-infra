@@ -1,0 +1,21 @@
+[project]
+name = "vocobase-bot"
+version = "0.1.0"
+description = "Self-hosted Pipecat voice bot (WebSocket transport) for the cold-start challenge"
+requires-python = ">=3.10"
+dependencies = [
+    # Slimmed vs the upstream quickstart: only the services we actually deploy.
+    # Dropping the webrtc/daily extras removes their transitive deps and shaves
+    # cold-start import time.
+    "pipecat-ai[silero,deepgram,openai,runner,websocket]",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.12.11,<1",
+]
+
+[tool.ruff]
+line-length = 100
+[tool.ruff.lint]
+select = ["I"]

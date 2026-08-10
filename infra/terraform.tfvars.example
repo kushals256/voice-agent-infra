@@ -1,0 +1,9 @@
+# Copy to terraform.tfvars (gitignored) OR pass via TF_VAR_* env (see scripts/deploy.sh).
+project_id    = "your-gcp-project-id"
+region        = "us-central1"
+min_instances = 0   # set to 20 for the section-5 burst test, 0 to scale to zero
+max_instances = 25
+
+# Secrets can also be provided via TF_VAR_deepgram_api_key etc. (preferred).
+# deepgram_api_key = "..."
+# nvidia_api_key   = "..."

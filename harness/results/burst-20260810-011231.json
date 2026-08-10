@@ -1,0 +1,94 @@
+{
+  "timestamp": "2026-08-09T19:42:31.891914+00:00",
+  "uri": "wss://voicebot-txznokm34q-uc.a.run.app/ws-client",
+  "steady": 10,
+  "burst": 10,
+  "target_s": 5.0,
+  "burst_results": [
+    {
+      "label": "burst",
+      "latency_s": 4.75331262499094
+    },
+    {
+      "label": "burst",
+      "latency_s": 4.774294667004142
+    },
+    {
+      "label": "burst",
+      "latency_s": 5.103437458048575
+    },
+    {
+      "label": "burst",
+      "latency_s": 4.928391624998767
+    },
+    {
+      "label": "burst",
+      "latency_s": 4.397393124992959
+    },
+    {
+      "label": "burst",
+      "latency_s": 4.9486182919936255
+    },
+    {
+      "label": "burst",
+      "latency_s": 4.0605060000089
+    },
+    {
+      "label": "burst",
+      "latency_s": 5.4559962910134345
+    },
+    {
+      "label": "burst",
+      "latency_s": 4.7764472080161795
+    },
+    {
+      "label": "burst",
+      "latency_s": 4.748581624997314
+    }
+  ],
+  "steady_results": [
+    {
+      "label": "steady",
+      "latency_s": 5.654737290984485
+    },
+    {
+      "label": "steady",
+      "latency_s": 4.261125333956443
+    },
+    {
+      "label": "steady",
+      "latency_s": 5.267949000000954
+    },
+    {
+      "label": "steady",
+      "latency_s": 5.409755291999318
+    },
+    {
+      "label": "steady",
+      "latency_s": 5.392429083993193
+    },
+    {
+      "label": "steady",
+      "latency_s": 5.391667374991812
+    },
+    {
+      "label": "steady",
+      "latency_s": 5.473002290993463
+    },
+    {
+      "label": "steady",
+      "latency_s": 5.416426000010688
+    },
+    {
+      "label": "steady",
+      "latency_s": 5.480054999992717
+    },
+    {
+      "label": "steady",
+      "latency_s": 4.992744750052225
+    }
+  ],
+  "median_s": 4.775370937510161,
+  "p95_s": 5.297344816179248,
+  "passed": false
+}

@@ -1,0 +1,3 @@
+# Harness deps are intentionally tiny (no pipecat/torch needed): the bot sends
+# raw PCM, so "first audio" is just the first binary WebSocket frame.
+websockets>=13.0
