@@ -1,4 +1,4 @@
-# Warm Pool Voice Agent
+# Warm Pool Voice Agent Infrastructure
 
 Self-hosted real-time voice agent on **Google Cloud Run**, with Terraform IaC, a
 burst latency harness, and measured cold-start breakdown.
